@@ -28,7 +28,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var map: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private var locationRequest: LocationRequest? = null
+    //private var locationRequest: LocationRequest? = null
     private lateinit var binding: ActivityMapsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,27 +81,28 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 requestLocationPermissions()
         } else {
-            if (locationRequest == null) {
-                locationRequest?.let{ locationRequest ->
-                     LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 5000).apply {
-                        setMinUpdateIntervalMillis(1000)
-                        setGranularity(Granularity.GRANULARITY_PERMISSION_LEVEL)
-                        setWaitForAccurateLocation(true)
-                    }.build()
-                    val locationCallback = object : LocationCallback() {
-                        override fun onLocationResult(locationResult: LocationResult) {
-                            getCurrentLocation()
-                        }
-                    }
-                    fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
-                }
-            }
+//            if (locationRequest == null) {
+//                locationRequest?.let{ locationRequest ->
+//                     LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 5000).apply {
+//                        setMinUpdateIntervalMillis(1000)
+//                        setGranularity(Granularity.GRANULARITY_PERMISSION_LEVEL)
+//                        setWaitForAccurateLocation(true)
+//                    }.build()
+//                    val locationCallback = object : LocationCallback() {
+//                        override fun onLocationResult(locationResult: LocationResult) {
+//                            getCurrentLocation()
+//                        }
+//                    }
+//                    fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
+//                }
+//            }
+            map.isMyLocationEnabled = true
             fusedLocationClient.lastLocation.addOnCompleteListener {
                 val location = it.result
                 if (location != null){
                     val latLng = LatLng(location.latitude, location.longitude)
-                    map.clear()
-                    map.addMarker(MarkerOptions().position(latLng).title("You are here!"))
+//                    map.clear()
+//                    map.addMarker(MarkerOptions().position(latLng).title("You are here!"))
                     val update = CameraUpdateFactory.newLatLngZoom(latLng, 16.0f)
                     map.moveCamera(update)
                 } else {
