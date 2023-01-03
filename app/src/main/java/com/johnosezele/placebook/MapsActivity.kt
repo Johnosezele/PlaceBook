@@ -1,14 +1,14 @@
 package com.johnosezele.placebook
 
 import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.nfc.Tag
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.core.app.ActivityCompat
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.*
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -28,6 +28,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var map: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var locationRequest: LocationRequest? = null
     private lateinit var binding: ActivityMapsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,6 +59,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_LOCATION) {
             if (grantResults.size == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getCurrentLocation()
@@ -73,15 +75,32 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     //method to get user current location
+    @SuppressLint("MissingPermission")
     private fun getCurrentLocation() {
         if(ActivityCompat.checkSelfPermission(this,
             android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 requestLocationPermissions()
         } else {
+            if (locationRequest == null) {
+                locationRequest?.let{ locationRequest ->
+                     LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 5000).apply {
+                        setMinUpdateIntervalMillis(1000)
+                        setGranularity(Granularity.GRANULARITY_PERMISSION_LEVEL)
+                        setWaitForAccurateLocation(true)
+                    }.build()
+                    val locationCallback = object : LocationCallback() {
+                        override fun onLocationResult(locationResult: LocationResult) {
+                            getCurrentLocation()
+                        }
+                    }
+                    fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
+                }
+            }
             fusedLocationClient.lastLocation.addOnCompleteListener {
                 val location = it.result
                 if (location != null){
                     val latLng = LatLng(location.latitude, location.longitude)
+                    map.clear()
                     map.addMarker(MarkerOptions().position(latLng).title("You are here!"))
                     val update = CameraUpdateFactory.newLatLngZoom(latLng, 16.0f)
                     map.moveCamera(update)
