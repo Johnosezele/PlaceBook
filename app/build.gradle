@@ -4,6 +4,8 @@ plugins {
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
+apply plugin: 'kotlin-kapt'
+
 android {
     compileSdk 32
 
@@ -48,6 +50,14 @@ dependencies {
 
     //places API
     implementation "com.google.android.libraries.places:places:$places_api_version"
+
+    implementation "androidx.activity:activity-ktx:1.6.1"
+
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+
+    implementation "androidx.room:room-runtime:$room_version"
+
+    kapt "androidx.room:room-compiler:$room_version"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
