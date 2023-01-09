@@ -15,12 +15,9 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.*
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.net.PlacesClient
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.PointOfInterest
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FetchPhotoRequest
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
@@ -74,6 +71,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         setupMapListeners()
+        createBookmarkMarkerObserver()
         getCurrentLocation()
     }
 
@@ -224,6 +222,46 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
         marker.remove()
+    }
+
+    //method to add a bookmark marker to the map
+    //This is a helper method that adds a single blue marker to the map based on a
+    //BookmarkMarkerView.
+    private fun addPlaceMarker(
+        bookmark: MapsViewModel.BookmarkMarkerView): Marker? {
+        val marker = map.addMarker(MarkerOptions()
+            .position(bookmark.location)
+            .icon(BitmapDescriptorFactory.defaultMarker(
+                BitmapDescriptorFactory.HUE_AZURE
+            ))
+            .alpha(0.8f))
+
+        if (marker != null) {
+            marker.tag = bookmark
+        }
+
+        return marker
+    }
+
+    //method to display all of the bookmark markers
+//    This method walks through a list of BookmarkMarkerView objects and calls
+//    addPlaceMarker() for each one.
+    private fun displayAllBookmarks(
+        bookmarks: List<MapsViewModel.BookmarkMarkerView>
+    ){
+        bookmarks.forEach { addPlaceMarker(it) }
+    }
+
+    //method that observes the changes to the bookmark marker
+    //views in the maps View model.
+    //This method observes changes to the BookmarkMarkerView objects from the
+    //MapsViewModel and updates the View when they change
+    private fun createBookmarkMarkerObserver(){
+        mapsViewModel.getBookmarkMarkerViews()?.observe(
+            this, {
+                map.clear()
+                it?.let { displayAllBookmarks(it) }
+            })
     }
 }
 
