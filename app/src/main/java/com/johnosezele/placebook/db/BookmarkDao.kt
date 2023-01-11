@@ -22,4 +22,7 @@ interface BookmarkDao {
 
     @Update(onConflict = REPLACE)
     fun updateBookmark(bookmark: Bookmark)
+
+    @Delete
+    fun deleteBookmark(bookmark: Bookmark)
 }
