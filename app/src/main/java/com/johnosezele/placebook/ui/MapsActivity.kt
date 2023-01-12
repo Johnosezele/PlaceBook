@@ -209,6 +209,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             .snippet(place.phoneNumber)
         )
         marker?.tag = PlaceInfo(place, photo)
+        marker?.showInfoWindow()
     }
 
     class PlaceInfo(val place: Place? = null, val image: Bitmap? = null)
