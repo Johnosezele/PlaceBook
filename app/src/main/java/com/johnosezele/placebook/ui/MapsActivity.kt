@@ -232,6 +232,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         bookmark: MapsViewModel.BookmarkMarkerView): Marker? {
         val marker = map.addMarker(MarkerOptions()
             .position(bookmark.location)
+            .title(bookmark.name)
+            .snippet(bookmark.phone)
             .icon(BitmapDescriptorFactory.defaultMarker(
                 BitmapDescriptorFactory.HUE_AZURE
             ))

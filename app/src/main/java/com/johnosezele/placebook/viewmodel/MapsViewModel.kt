@@ -1,6 +1,7 @@
 package com.johnosezele.placebook.viewmodel
 
 import android.app.Application
+import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
@@ -10,6 +11,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.model.Place
 import com.johnosezele.placebook.model.Bookmark
 import com.johnosezele.placebook.repository.BookmarkRepo
+import com.johnosezele.placebook.util.ImageUtils
 
 class MapsViewModel(application: Application) :
     AndroidViewModel(application) {
@@ -42,8 +44,15 @@ class MapsViewModel(application: Application) :
     //bookmark.
     data class BookmarkMarkerView(
         var id: Long? = null,
-        val location: LatLng = LatLng(0.0, 0.0)
-    )
+        var location: LatLng = LatLng(0.0, 0.0),
+        var name: String = "",
+        var phone: String = ""
+    ) {
+        fun getImage(context: Context) = id?.let {
+            ImageUtils.loadBitmapFromFile(context,
+                Bookmark.generateImageFilename(it))
+        }
+    }
 
     //method to populate book marker views from the bookmarks stored in db
     //this helper method that converts a Bookmark object from the repo into a
@@ -51,7 +60,9 @@ class MapsViewModel(application: Application) :
     private fun bookmarkToMarkerView(bookmark: Bookmark) =
          BookmarkMarkerView(
              bookmark.id,
-             LatLng(bookmark.latitude, bookmark.longitude)
+             LatLng(bookmark.latitude, bookmark.longitude),
+             bookmark.name,
+             bookmark.phone
          )
 
     //This method maps the LiveData<List<Bookmark>> objects provided by

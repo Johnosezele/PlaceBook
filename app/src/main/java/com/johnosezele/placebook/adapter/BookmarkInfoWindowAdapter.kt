@@ -8,7 +8,7 @@ import com.johnosezele.placebook.databinding.ContentBookmarkInfoBinding
 import com.johnosezele.placebook.ui.MapsActivity
 import com.johnosezele.placebook.viewmodel.MapsViewModel
 
-class BookmarkInfoWindowAdapter(context: Activity) : GoogleMap.InfoWindowAdapter {
+class BookmarkInfoWindowAdapter(val context: Activity) : GoogleMap.InfoWindowAdapter {
     private val binding = ContentBookmarkInfoBinding.inflate(context.layoutInflater)
 
     override fun getInfoContents(marker: Marker): View {
@@ -27,6 +27,7 @@ class BookmarkInfoWindowAdapter(context: Activity) : GoogleMap.InfoWindowAdapter
             is MapsViewModel.BookmarkMarkerView -> {
                 val bookMarkView = marker.tag as MapsViewModel.BookmarkMarkerView
                 //set ImageView bitmap here
+                imageView.setImageBitmap(bookMarkView.getImage(context))
             }
         }
         return binding.root
