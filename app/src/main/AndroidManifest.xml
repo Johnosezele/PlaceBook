@@ -11,9 +11,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PlaceBook">
+
         <activity
-            android:name=".ui.BookmarkDetailsActivity"
-            android:exported="false" />
+            android:name="com.johnosezele.placebook.ui.BookmarkDetailsActivity"
+            android:label="bookmark"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden">
+        </activity>
 
         <meta-data
             android:name="com.google.android.gms.version"
