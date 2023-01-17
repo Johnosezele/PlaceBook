@@ -40,8 +40,7 @@ class MapsViewModel(application: Application) :
     }
 
     //class to store bookmark marker views
-    //This will hold the information needed by the View to plot a marker for a single
-    //bookmark.
+    //This will hold the information needed by the View to plot a marker for a single bookmark.
     data class BookmarkMarkerView(
         var id: Long? = null,
         var location: LatLng = LatLng(0.0, 0.0),
