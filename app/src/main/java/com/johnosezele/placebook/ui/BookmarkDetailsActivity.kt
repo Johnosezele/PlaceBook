@@ -38,5 +38,23 @@ class BookmarkDetailsActivity : AppCompatActivity() {
         }
     }
 
-
+    //When the user taps on the Info window for a bookmark on the maps Activity, it
+    //passes the bookmark ID to the details Activity, this method is used to read this Intent data
+    //and use it to populate the UI.
+    private fun getIntentData(){
+        //1
+        val bookmarkId = intent.getLongExtra(
+            MapsActivity.Companion.EXTRA_BOOKMARK_ID, 0)
+        //2
+        bookmarkDetailsViewModel.getBookmark(bookmarkId)?.observe(this,
+            {
+                //3
+                it?.let {
+                    bookmarkDetailsView = it
+                    //4
+                    databinding.bookmarkDetailsView = it
+                    populateImageView()
+                }
+            })
+    }
 }
