@@ -18,10 +18,10 @@ class BookmarkDetailsActivity : AppCompatActivity() {
         override fun onCreate(savedInstanceState: android.os.Bundle?) {
         super.onCreate(savedInstanceState)
         databinding = DataBindingUtil.setContentView(
-            this,
-            R.layout.activity_bookmark_details
+            this, R.layout.activity_bookmark_details
         )
         setupToolbar()
+            getIntentData()
     }
 
     private fun setupToolbar() {
@@ -42,16 +42,12 @@ class BookmarkDetailsActivity : AppCompatActivity() {
     //passes the bookmark ID to the details Activity, this method is used to read this Intent data
     //and use it to populate the UI.
     private fun getIntentData(){
-        //1
         val bookmarkId = intent.getLongExtra(
             MapsActivity.Companion.EXTRA_BOOKMARK_ID, 0)
-        //2
         bookmarkDetailsViewModel.getBookmark(bookmarkId)?.observe(this,
             {
-                //3
                 it?.let {
                     bookmarkDetailsView = it
-                    //4
                     databinding.bookmarkDetailsView = it
                     populateImageView()
                 }
