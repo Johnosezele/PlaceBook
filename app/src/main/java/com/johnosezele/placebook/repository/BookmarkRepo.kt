@@ -25,4 +25,15 @@ class BookmarkRepo(context: Context) {
     //This method returns a live bookmark from the bookmark DAO
     fun getLiveBookmark(bookmarkId: Long): LiveData<Bookmark> =
         bookmarkDao.loadLiveBookmark(bookmarkId)
+
+    //updateBookmark() takes in a bookmark and saves it using the bookmark DAO
+    fun updateBookmark(bookmark: Bookmark){
+        bookmarkDao.updateBookmark(bookmark)
+    }
+
+    //getBookmark() takes in the bookmark ID of that updated bookmark and uses the bookmark DAO to load the corresponding bookmark
+    fun getBookmark(bookmarkId: Long): Bookmark{
+       return bookmarkDao.loadBookmark(bookmarkId)
+    }
 }
+

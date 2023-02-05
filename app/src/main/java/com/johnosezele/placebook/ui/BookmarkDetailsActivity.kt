@@ -2,6 +2,7 @@ package com.johnosezele.placebook.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import com.johnosezele.placebook.R
@@ -53,4 +54,12 @@ class BookmarkDetailsActivity : AppCompatActivity() {
                 }
             })
     }
-}
+
+    //override onCreateOptionsMenu and provide items for the Toolbar by loading in
+    //the menu_bookmark_details menu
+    override fun onCreateOptionsMenu(menu: android.view.Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_bookmark_details, menu)
+        return true
+    }
+
+    }

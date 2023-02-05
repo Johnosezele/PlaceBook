@@ -56,12 +56,35 @@ class BookmarkDetailsViewModel(application: Application) :
         }
     }
 
-    //method to return a live bookmark View based on a bookmark ID
+    //getBookmark() returns a live bookmark View based on a bookmark ID
     fun getBookmark(bookmarkId: Long) :LiveData<BookmarkDetailsView>? {
             if (bookmarkDetailsView == null) {
                 mapBookmarkToBookmarkView(bookmarkId)
             }
             return bookmarkDetailsView
         }
+
+    //When the user makes changes to a bookmark, you need to update the bookmark view
+    //model class. For that, you need a method to convert a bookmark view model to the
+    //database bookmark model.
+
+    //bookmarkViewToBookmark() takes a BookmarkDetailsView and returns a Bookmark with the
+    //updated parameters from the BookmarkDetailsView . You load the original
+    //bookmark values from the BookmarkRepo before updating them with the BookmarkDetailsView
+
+    private fun bookmarkViewToBookmark(bookmarkView: BookmarkDetailsView): Bookmark?{
+        val bookmark = bookmarkView.id?.let {
+            bookmarkRepo.getBookmark(it)
+        }
+        if (bookmark != null){
+            bookmark.id = bookmarkView.id
+            bookmark.name = bookmarkView.name
+            bookmark.phone = bookmarkView.phone
+            bookmark.address = bookmarkView.address
+            bookmark.notes = bookmark.notes
+        }
+        return bookmark
+    }
+
     }
 
