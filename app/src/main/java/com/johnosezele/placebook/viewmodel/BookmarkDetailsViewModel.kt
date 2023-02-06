@@ -9,6 +9,8 @@ import androidx.lifecycle.Transformations
 import com.johnosezele.placebook.model.Bookmark
 import com.johnosezele.placebook.repository.BookmarkRepo
 import com.johnosezele.placebook.util.ImageUtils
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class BookmarkDetailsViewModel(application: Application) :
     AndroidViewModel(application) {
@@ -84,6 +86,14 @@ class BookmarkDetailsViewModel(application: Application) :
             bookmark.notes = bookmark.notes
         }
         return bookmark
+    }
+
+    //updateBookmark() is used to update a bookmark in the background
+    fun updateBookmark(bookmarkView: BookmarkDetailsView){
+        GlobalScope.launch {
+            val bookmark = bookmarkViewToBookmark(bookmarkView)
+            bookmark?.let { bookmarkRepo.updateBookmark(it) }
+        }
     }
 
     }

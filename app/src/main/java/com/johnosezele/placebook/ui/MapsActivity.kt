@@ -129,7 +129,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 //                    fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
 //                }
 //            }
-            map.isMyLocationEnabled = true
+               map.isMyLocationEnabled = true
             fusedLocationClient.lastLocation.addOnCompleteListener {
                 val location = it.result
                 if (location != null){
