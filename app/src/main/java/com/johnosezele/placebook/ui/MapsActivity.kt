@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.location.*
@@ -58,8 +59,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
+        setupToolbar()
         setupLocationClient()
         setupPlacesClient()
+    }
+
+    //Enable support toolbar in MapsActivity
+    private fun setupToolbar(){
+        setSupportActionBar(binding.mainMapView.toolbar)
+        val toggle = ActionBarDrawerToggle(
+            this, binding.drawerLayout,
+            binding.mainMapView.toolbar,
+            R.string.open_drawer, R.string.close_drawer
+        )
+        toggle.syncState()
     }
 
     private fun setupMapListeners() {
@@ -286,6 +299,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         intent.putExtra(EXTRA_BOOKMARK_ID, bookmarkId)
         startActivity(intent)
     }
+
+
+    //Navigation drawer toggle icon
 }
 
 

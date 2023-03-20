@@ -31,8 +31,8 @@ class MapsViewModel(application: Application) :
         bookmark.name = place.name.toString()
         bookmark.longitude = place.latLng?.longitude ?: 0.0
         bookmark.latitude = place.latLng?.latitude ?: 0.0
-        bookmark.phone = place.phoneNumber.toString()
-        bookmark.address = place.address.toString()
+        bookmark.phone = place.phoneNumber?.toString().toString()
+        bookmark.address = place.address?.toString().toString()
 
         val newId = bookmarkRepo.addBookmark(bookmark)
         image?.let { bookmark.setImage(it, getApplication()) }
