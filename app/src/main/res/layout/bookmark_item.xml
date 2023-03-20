@@ -5,7 +5,7 @@ xmlns:tools="http://schemas.android.com/tools"
 <data>
 <variable
     name="bookmarkData"
-    type="com.johnosezele.placebook.viewmodel.MapsViewModel.BookmarkMarkerView" />
+    type="com.johnosezele.placebook.viewmodel.MapsViewModel.BookmarkView" />
 </data>
 
 <androidx.constraintlayout.widget.ConstraintLayout

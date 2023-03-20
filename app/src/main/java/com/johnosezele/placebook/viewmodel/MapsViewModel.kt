@@ -19,7 +19,7 @@ class MapsViewModel(application: Application) :
 
     //LiveData object that wraps a list of BookmarkMarkerView
     //objects
-    private var bookmarks: LiveData<List<BookmarkMarkerView>>? = null
+    private var bookmarks: LiveData<List<BookmarkView>>? = null
 
     private val bookmarkRepo: BookmarkRepo = BookmarkRepo(
         getApplication()
@@ -41,7 +41,7 @@ class MapsViewModel(application: Application) :
 
     //class to store bookmark marker views
     //This will hold the information needed by the View to plot a marker for a single bookmark.
-    data class BookmarkMarkerView(
+    data class BookmarkView(
         var id: Long? = null,
         var location: LatLng = LatLng(0.0, 0.0),
         var name: String = "",
@@ -56,8 +56,8 @@ class MapsViewModel(application: Application) :
     //method to populate book marker views from the bookmarks stored in db
     //this helper method that converts a Bookmark object from the repo into a
     //BookmarkMarkerView object
-    private fun bookmarkToMarkerView(bookmark: Bookmark) =
-         BookmarkMarkerView(
+    private fun bookmarkToBookmarkView(bookmark: Bookmark) =
+         BookmarkView(
              bookmark.id,
              LatLng(bookmark.latitude, bookmark.longitude),
              bookmark.name,
@@ -67,11 +67,11 @@ class MapsViewModel(application: Application) :
     //This method maps the LiveData<List<Bookmark>> objects provided by
     //BookmarkRepo into LiveData<List<BookmarkMarkerView>> objects that can
     //be used by MapsActivity
-    private fun mapBookmarksToMarkerView(){
+    private fun mapBookmarksToBookmarkView(){
         bookmarks = Transformations.map(bookmarkRepo.allBookmarks)
         { repoBookmarks ->
             repoBookmarks.map { bookmark ->
-                bookmarkToMarkerView(bookmark)
+                bookmarkToBookmarkView(bookmark)
             }
         }
     }
@@ -79,9 +79,9 @@ class MapsViewModel(application: Application) :
     //method to initialize and return the bookmark
     //marker views to the MapsActivity.
     //This method returns the LiveData object that will be observed by MapsActivity
-    fun getBookmarkMarkerViews() : LiveData<List<BookmarkMarkerView>>? {
+    fun getBookmarkViews() : LiveData<List<BookmarkView>>? {
         if (bookmarks == null) {
-            mapBookmarksToMarkerView()
+            mapBookmarksToBookmarkView()
         }
         return bookmarks
     }
