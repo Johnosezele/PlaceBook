@@ -17,6 +17,14 @@ class BookmarkListAdapter(
         val binding: BookmarkItemBinding,
         private val mapsActivity: MapsActivity
             ) : RecyclerView.ViewHolder(binding.root){
+        //when click event is fired, get the bookmarkView associated with the ViewHolder and
+        // call mapToBookmark() to zoom the map to the bookmark
+                init {
+                    binding.root.setOnClickListener {
+                        val bookmarkView = itemView.tag as MapsViewModel.BookmarkView
+                        mapsActivity.moveToBookmark(bookmarkView)
+                    }
+                }
 
             }
 

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -52,6 +53,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     //bookmarksList Adapter for navdrawer
     private lateinit var bookmarkListAdapter: BookmarkListAdapter
+
+    private var markers = HashMap<Long, Marker>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -275,6 +278,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             marker.tag = bookmark
         }
 
+        bookmark.id?.let {
+            if (marker != null) {
+                markers.put(it, marker)
+            }
+        }
+
         return marker
     }
 
@@ -295,6 +304,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapsViewModel.getBookmarkViews()?.observe(
             this, {
                 map.clear()
+                markers.clear()
                 it?.let { displayAllBookmarks(it) }
                 bookmarkListAdapter.setBookmarkData(it)
             })
@@ -318,6 +328,29 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         bookmarkListAdapter = BookmarkListAdapter(null, this)
         binding.drawerViewMaps.bookmarkRecyclerView.adapter = bookmarkListAdapter
     }
+
+    //helper method to zoom the map to a specific location
+    private fun updateMapToLocation(location: Location) {
+        val latLng = LatLng(location.latitude, location.longitude)
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16.0f))
+    }
+
+    //method that moves the map to a bookmark location
+    fun moveToBookmark(bookmark: MapsViewModel.BookmarkView){
+        //before zooming the bookmark, the nav drawer is closed
+        binding.drawerLayout.closeDrawer(binding.drawerViewMaps.drawerView)
+        //markers HashMap is used to look up the Marker
+        val marker = markers[bookmark.id]
+        //if marker is found, its info window is shown
+        marker?.showInfoWindow()
+        //A Location object is created from the bookmark, and
+        //updateMapToLocation() is called to zoom the map to the bookmark
+        val location = Location("")
+        location.latitude = bookmark.location.latitude
+        location.longitude = bookmark.location.longitude
+        updateMapToLocation(location)
+    }
+
 }
 
 
