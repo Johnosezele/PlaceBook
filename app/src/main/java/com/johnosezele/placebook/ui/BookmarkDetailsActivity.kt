@@ -4,14 +4,20 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import com.johnosezele.placebook.R
 import com.johnosezele.placebook.databinding.ActivityBookmarkDetailsBinding
 import com.johnosezele.placebook.viewmodel.BookmarkDetailsViewModel
+import java.io.File
 
-class BookmarkDetailsActivity : AppCompatActivity() {
+class BookmarkDetailsActivity : AppCompatActivity(),
+    PhotoOptionDialogFragment.PhotoOptionDialogListener{
     private lateinit var databinding: ActivityBookmarkDetailsBinding
+
+    //hold a reference to the temporary image file when capturing an image
+    private var photoFile: File? = null
 
     //initializing the view model
     private val bookmarkDetailsViewModel by viewModels<BookmarkDetailsViewModel>()
@@ -37,6 +43,10 @@ class BookmarkDetailsActivity : AppCompatActivity() {
             placeImage?.let {
                 databinding.imageViewPlace.setImageBitmap(placeImage)
             }
+        }
+
+        databinding.imageViewPlace.setOnClickListener{
+            replaceImage()
         }
     }
 
@@ -90,4 +100,25 @@ class BookmarkDetailsActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
 
+    override fun onCaptureClick() {
+        Toast.makeText(this, "Camera Capture",
+        Toast.LENGTH_SHORT).show()
     }
+
+    override fun onPickClick() {
+        Toast.makeText(this, "Gallery Pick",
+            Toast.LENGTH_SHORT).show()
+    }
+
+    //mthd that creates the photo option dialog and displays it to the user
+    private fun replaceImage() {
+        val newFragment = PhotoOptionDialogFragment.newInstance(this)
+        newFragment?.show(supportFragmentManager, "photoOptionDialog")
+    }
+
+    //define a request code to identify the request when image capture activity returns the image
+    companion object{
+
+    }
+
+}
