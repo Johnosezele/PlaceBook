@@ -46,5 +46,45 @@ object ImageUtils {
         return File.createTempFile(filename, ".jpg", filesDir)
     }
 
+    //code to downsample the photo to match the default bookmark photo size
 
+    //This method is used to calculate the optimum inSampleSize that can be used to
+    //resize an image to a specified width and height.
+    private fun calculateInSampleSize(
+        width: Int,
+        height: Int,
+        reqWidth: Int,
+        reqHeight: Int
+    ): Int {
+        var inSampleSize = 1
+        if (height > reqHeight || width > reqWidth) {
+            val halfHeight = height / 2
+            val halfWidth = width / 2
+            while (halfHeight / inSampleSize >= reqHeight &&
+                halfWidth / inSampleSize >= reqWidth) {
+                inSampleSize *= 2
+            }
+        }
+        return inSampleSize
+    }
+
+    //Now that you can calculate the proper sample size for any width and height, a new
+    //method can be added to decode a file
+
+    //This method is called by BookmarkDetailsActivity to get the downsampled image
+    //with a specific width and height from the captured photo file
+    fun decodeFileToSize (
+        filePath: String,
+        width: Int,
+        height: Int
+    ): Bitmap {
+        val options = BitmapFactory.Options()
+        options.inJustDecodeBounds = true
+        BitmapFactory.decodeFile(filePath, options)
+        options.inSampleSize = calculateInSampleSize(
+            options.outWidth, options.outHeight, width, height
+        )
+        options.inJustDecodeBounds = false
+        return BitmapFactory.decodeFile(filePath, options)
+    }
 }
