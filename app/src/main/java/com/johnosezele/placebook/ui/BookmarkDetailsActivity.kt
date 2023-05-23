@@ -2,6 +2,7 @@ package com.johnosezele.placebook.ui
 
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -18,6 +19,8 @@ import java.io.File
 
 class BookmarkDetailsActivity : AppCompatActivity(),
     PhotoOptionDialogFragment.PhotoOptionDialogListener{
+
+
     private lateinit var databinding: ActivityBookmarkDetailsBinding
 
     //hold a reference to the temporary image file when capturing an image
@@ -158,6 +161,40 @@ class BookmarkDetailsActivity : AppCompatActivity(),
    //defines the request code to use when processing the camera capture Intent
     companion object{
         private const val REQUEST_CAPTURE_IMAGE = 1
+    }
+
+    //
+    private fun updateImage(image: Bitmap) {
+        bookmarkDetailsView?.let {
+            databinding.imageViewPlace.setImageBitmap(image)
+            it.setImage(this, image)
+        }
+    }
+
+    private fun getImageWithPath(filePath: String) =
+        ImageUtils.decodeFileToSize(
+            filePath,
+            resources.getDimensionPixelSize(R.dimen.default_image_width),
+            resources.getDimensionPixelSize(R.dimen.default_image_height)
+        )
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == android.app.Activity.RESULT_OK) {
+            when(requestCode) {
+                REQUEST_CAPTURE_IMAGE -> {
+                    val photoFile = photoFile ?: return
+                    val uri = FileProvider.getUriForFile(this,
+                    "com.johnosezele.placebook.fileprovider", photoFile)
+                    revokeUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                    val image = getImageWithPath(photoFile.absolutePath)
+                    val bitmap = ImageUtils.rotateImageIfRequired(this,
+                    image, uri)
+                    updateImage(bitmap)
+                }
+            }
+        }
     }
 
 }
