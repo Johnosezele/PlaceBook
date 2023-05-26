@@ -148,8 +148,7 @@ class BookmarkDetailsActivity : AppCompatActivity(),
     }
 
     override fun onPickClick() {
-        Toast.makeText(this, "Gallery Pick",
-            Toast.LENGTH_SHORT).show()
+
     }
 
     //mthd that creates the photo option dialog and displays it to the user
@@ -161,6 +160,7 @@ class BookmarkDetailsActivity : AppCompatActivity(),
    //defines the request code to use when processing the camera capture Intent
     companion object{
         private const val REQUEST_CAPTURE_IMAGE = 1
+        private const val REQUEST_GALLERY_IMAGE = 2
     }
 
     //
