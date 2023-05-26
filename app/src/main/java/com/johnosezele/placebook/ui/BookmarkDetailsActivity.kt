@@ -197,6 +197,17 @@ class BookmarkDetailsActivity : AppCompatActivity(),
                     image, uri)
                     updateImage(bitmap)
                 }
+                //handle image selection:
+                REQUEST_GALLERY_IMAGE -> if (data != null && data.data != null)
+                {
+                    val imageUri = data.data as Uri
+                    val image = getImageWithAuthority(imageUri)
+                    image?.let {
+                        val bitmap = ImageUtils.rotateImageIfRequired(this, it,
+                            imageUri)
+                        updateImage(bitmap)
+                    }
+                }
             }
         }
     }
