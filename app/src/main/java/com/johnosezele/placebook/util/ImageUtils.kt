@@ -124,40 +124,41 @@ object ImageUtils {
             else -> img
         }
     }
-}
 
-//method that reads an image from a Uri input stream
-fun decodeUriStreamToSize(
-    uri: Uri,
-    width: Int,
-    height: Int,
-    context: Context
-): Bitmap? {
-    var inputStream: InputStream? = null
-    try {
-        val options: BitmapFactory.Options
-        inputStream = context.contentResolver.openInputStream(uri)
-        if (inputStream != null) {
-            options = BitmapFactory.Options()
-            options.inJustDecodeBounds = false
-            BitmapFactory.decodeStream(inputStream, null, options)
-            inputStream.close()
+    //method that reads an image from a Uri input stream
+    fun decodeUriStreamToSize(
+        uri: Uri,
+        width: Int,
+        height: Int,
+        context: Context
+    ): Bitmap? {
+        var inputStream: InputStream? = null
+        try {
+            val options: BitmapFactory.Options
             inputStream = context.contentResolver.openInputStream(uri)
             if (inputStream != null) {
-                options.inSampleSize = calculateInSampleSize(
-                    options.outWidth, options.outHeight,
-                    width, height)
+                options = BitmapFactory.Options()
                 options.inJustDecodeBounds = false
-                val bitmap = BitmapFactory.decodeStream(
-                    inputStream, null, options)
+                BitmapFactory.decodeStream(inputStream, null, options)
                 inputStream.close()
-                return bitmap
+                inputStream = context.contentResolver.openInputStream(uri)
+                if (inputStream != null) {
+                    options.inSampleSize = calculateInSampleSize(
+                        options.outWidth, options.outHeight,
+                        width, height)
+                    options.inJustDecodeBounds = false
+                    val bitmap = BitmapFactory.decodeStream(
+                        inputStream, null, options)
+                    inputStream.close()
+                    return bitmap
+                }
             }
+            return null
+        } catch (e: Exception) {
+            return null
+        } finally {
+            inputStream?.close()
         }
-        return null
-    } catch (e: Exception) {
-        return null
-    } finally {
-        inputStream?.close()
     }
 }
+

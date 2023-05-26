@@ -3,8 +3,10 @@ package com.johnosezele.placebook.ui
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -148,7 +150,9 @@ class BookmarkDetailsActivity : AppCompatActivity(),
     }
 
     override fun onPickClick() {
-
+        val pickIntent = Intent(Intent.ACTION_PICK,
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(pickIntent, REQUEST_GALLERY_IMAGE)
     }
 
     //mthd that creates the photo option dialog and displays it to the user
@@ -196,5 +200,13 @@ class BookmarkDetailsActivity : AppCompatActivity(),
             }
         }
     }
+
+    private fun getImageWithAuthority(uri: Uri) =
+        ImageUtils.decodeUriStreamToSize(
+            uri,
+            resources.getDimensionPixelSize(R.dimen.default_image_width),
+            resources.getDimensionPixelSize(R.dimen.default_image_height),
+            this
+        )
 
 }
