@@ -15,7 +15,8 @@ data class Bookmark(
     var longitude: Double = 0.0,
     var phone: String = "",
     var address: String = "",
-    var notes: String = ""
+    var notes: String = "",
+    var category: String = ""
 ) {
     //setImage() provides the public interface for saving an image for a Bookmark
     fun setImage(image: Bitmap, context: Context){
