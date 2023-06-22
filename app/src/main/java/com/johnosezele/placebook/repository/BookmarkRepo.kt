@@ -86,5 +86,8 @@ fun placeTypeToCategory(placeType: Place.Type): String{
     fun getCategoryResourceId(placeCategory: String): Int?{
         return allCategories[placeCategory]
     }
+
+    val categories: List<String>
+        get() = ArrayList(allCategories.keys)
 }
 
