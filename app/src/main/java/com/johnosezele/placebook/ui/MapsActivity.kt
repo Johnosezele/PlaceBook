@@ -272,6 +272,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    //handling the addBookmark() method in MapsViewModel
+    private fun newBookmark(latLng: LatLng) {
+        GlobalScope.launch {
+            val bookmarkId = mapsViewModel.addBookmark(latLng)
+            bookmarkId?.let {
+                startBookmarkDetails(it)
+            }
+        }
+    }
+
     //method to add a bookmark marker to the map
     //This is a helper method that adds a single blue marker to the map based on a
     //BookmarkMarkerView.
@@ -408,7 +418,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
         }
     }
-
 }
 
 
