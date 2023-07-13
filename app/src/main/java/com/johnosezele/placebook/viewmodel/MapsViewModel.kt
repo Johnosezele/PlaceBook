@@ -40,6 +40,15 @@ class MapsViewModel(application: Application) :
         Log.i(TAG, "New bookmark $newId added to the database.")
     }
 
+    fun addBookmark(latLng: LatLng) : Long? {
+        val bookmark = bookmarkRepo.createBookmark()
+        bookmark.name = "Untitled"
+        bookmark.longitude = latLng.longitude
+        bookmark.latitude = latLng.latitude
+        bookmark.category = "Other"
+        return bookmarkRepo.addBookmark(bookmark)
+    }
+
     //class to store bookmark marker views
     //This will hold the information needed by the View to plot a marker for a single bookmark.
     data class BookmarkView(
