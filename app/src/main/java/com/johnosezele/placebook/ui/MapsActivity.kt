@@ -101,6 +101,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         binding.mainMapView.fab.setOnClickListener {
             searchAtCurrentLocation()
         }
+        //listener for adHoc bookmark
+        map.setOnMapLongClickListener {
+            latLng -> newBookmark(latLng)
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
